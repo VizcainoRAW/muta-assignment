@@ -2,6 +2,8 @@ package com.muta.assessment.entity;
 
 import com.muta.assessment.model.InventoryImpact;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,8 +34,9 @@ public abstract class OperationalEvent {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "event_data", columnDefinition = "jsonb")
-    private Map eventData = new HashMap();
+    private Map<String, Object> eventData = new HashMap<>();
 
     @Column(name = "inventory_impact", nullable = false)
     @Enumerated(EnumType.STRING)
