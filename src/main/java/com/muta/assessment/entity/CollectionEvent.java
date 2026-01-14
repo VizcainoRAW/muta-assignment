@@ -27,4 +27,12 @@ public class CollectionEvent extends OperationalEvent {
                 InventoryImpact.ImpactType.IN
         );
     }
+
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public void setCollectedQuantity(BigDecimal collectedQuantity) {
+        this.collectedQuantity = collectedQuantity;
+    }
 }

@@ -36,4 +36,28 @@ public class TransferEvent extends OperationalEvent {
                 new InventoryImpact(targetWarehouseId, transferredQuantity, InventoryImpact.ImpactType.IN)
         );
     }
+
+    public Long getSourceWarehouseId() {
+        return sourceWarehouseId;
+    }
+
+    public void setSourceWarehouseId(Long sourceWarehouseId) {
+        this.sourceWarehouseId = sourceWarehouseId;
+    }
+
+    public Long getTargetWarehouseId() {
+        return targetWarehouseId;
+    }
+
+    public void setTargetWarehouseId(Long targetWarehouseId) {
+        this.targetWarehouseId = targetWarehouseId;
+    }
+
+    public BigDecimal getTransferredQuantity() {
+        return transferredQuantity;
+    }
+
+    public void setTransferredQuantity(BigDecimal transferredQuantity) {
+        this.transferredQuantity = transferredQuantity;
+    }
 }

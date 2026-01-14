@@ -16,4 +16,16 @@ public class InventoryImpact {
     public enum ImpactType {
         IN, OUT, NEUTRAL
     }
+
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    public ImpactType getType() {
+        return type;
+    }
+
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
 }

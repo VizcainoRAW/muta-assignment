@@ -28,4 +28,12 @@ public class AdjustmentEvent extends OperationalEvent {
                 type
         );
     }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public void setAdjustedQuantity(BigDecimal adjustedQuantity) {
+        this.adjustedQuantity = adjustedQuantity;
+    }
 }

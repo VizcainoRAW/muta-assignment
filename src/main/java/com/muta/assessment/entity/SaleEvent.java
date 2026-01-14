@@ -27,4 +27,16 @@ public class SaleEvent extends OperationalEvent {
                 InventoryImpact.ImpactType.OUT
         );
     }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setSoldQuantity(BigDecimal soldQuantity) {
+        this.soldQuantity = soldQuantity;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
 }

@@ -14,4 +14,8 @@ public class License {
 
     @Column(nullable = false)
     private String status;
+
+    public String getStatus() {
+        return status;
+    }
 }

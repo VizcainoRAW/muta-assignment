@@ -47,4 +47,28 @@ public abstract class OperationalEvent {
     public Long getWarehouseId() {
         return warehouseId;
     }
+
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    public Long getLicenseId() {
+        return licenseId;
+    }
+
+    public void setLicenseId(Long licenseId) {
+        this.licenseId = licenseId;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setEventTimestamp(Instant eventTimestamp) {
+        this.eventTimestamp = eventTimestamp;
+    }
 }
