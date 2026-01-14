@@ -60,4 +60,17 @@ public abstract class OperationalEvent {
         }
         inventoryImpact = calculateInventoryImpact();
     }
+
+    public Map<String, Object> getEventData() {
+        return eventData;
+    }
+
+    public void setEventData(Map<String, Object> eventData) {
+        this.eventData = eventData;
+    }
+
+    public void setQuantity(BigDecimal quantity){
+        this.quantity = quantity;
+    }
+
 }
