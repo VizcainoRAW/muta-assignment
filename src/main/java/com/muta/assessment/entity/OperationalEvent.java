@@ -6,15 +6,17 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@Table(name = "operational_events")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "events")
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "event_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class OperationalEvent {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,52 +27,31 @@ public abstract class OperationalEvent {
     @Column(name = "warehouse_id", nullable = false)
     private Long warehouseId;
 
+    @Column(name = "event_type", insertable = false, updatable = false)
+    private String eventType;
+
     @Column(name = "event_timestamp", nullable = false)
-    private LocalDateTime eventTimestamp;
+    private Instant eventTimestamp;
 
     @Column(name = "created_by", nullable = false)
-    private String createdBy;
+    private Long createdBy;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Instant createdAt = Instant.now();
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "event_data", columnDefinition = "jsonb")
-    private Map<String, Object> eventData = new HashMap<>();
-
-    @Column(name = "inventory_impact", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private InventoryImpact inventoryImpact;
-
-    @Column(name = "quantity", nullable = false)
-    private BigDecimal quantity;
-
-    @Column(name = "item_id")
-    private Long itemId;
-
-    @Version
-    private Integer version;
-
-    public abstract InventoryImpact calculateInventoryImpact();
+    public abstract InventoryImpact calculateImpact();
 
     @PrePersist
-    protected void prePersist() {
+    protected void onCreate() {
         if (createdAt == null) {
-            createdAt = LocalDateTime.now();
+            createdAt = Instant.now();
         }
-        inventoryImpact = calculateInventoryImpact();
+        if (eventTimestamp == null) {
+            eventTimestamp = Instant.now();
+        }
     }
 
-    public Map<String, Object> getEventData() {
-        return eventData;
+    public Long getWarehouseId() {
+        return warehouseId;
     }
-
-    public void setEventData(Map<String, Object> eventData) {
-        this.eventData = eventData;
-    }
-
-    public void setQuantity(BigDecimal quantity){
-        this.quantity = quantity;
-    }
-
 }

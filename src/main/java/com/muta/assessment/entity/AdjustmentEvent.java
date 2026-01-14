@@ -1,50 +1,31 @@
 package com.muta.assessment.entity;
 
 import com.muta.assessment.model.InventoryImpact;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
 @Entity
-@DiscriminatorValue("ADJUSTMENT")
+@Table(name = "adjustment_events")
+@DiscriminatorValue("adjustment")
 public class AdjustmentEvent extends OperationalEvent {
 
-    @Transient
-    public String getReason() {
-        return (String) getEventData().get("reason");
-    }
+    @Column(name = "reason", nullable = false, columnDefinition = "TEXT")
+    private String reason;
 
-    @Transient
-    public void setReason(String reason) {
-        getEventData().put("reason", reason);
-    }
-
-    @Transient
-    public BigDecimal getAdjustedQuantity() {
-        return new BigDecimal(getEventData().get("adjusted_quantity").toString());
-    }
-
-    @Transient
-    public void setAdjustedQuantity(BigDecimal quantity) {
-        getEventData().put("adjusted_quantity", quantity);
-        setQuantity(quantity.abs());
-    }
-
-    @Transient
-    public String getAdjustmentType() {
-        return (String) getEventData().get("adjustment_type");
-    }
-
-    @Transient
-    public void setAdjustmentType(String type) {
-        getEventData().put("adjustment_type", type);
-    }
+    @Column(name = "adjusted_quantity", nullable = false, precision = 12, scale = 3)
+    private BigDecimal adjustedQuantity;
 
     @Override
-    public InventoryImpact calculateInventoryImpact() {
-        String type = getAdjustmentType();
-        return "IN".equals(type) ? InventoryImpact.IN : InventoryImpact.OUT;
+    public InventoryImpact calculateImpact() {
+        InventoryImpact.ImpactType type = adjustedQuantity.compareTo(BigDecimal.ZERO) > 0
+                ? InventoryImpact.ImpactType.IN
+                : InventoryImpact.ImpactType.OUT;
+
+        return new InventoryImpact(
+                getWarehouseId(),
+                adjustedQuantity.abs(),
+                type
+        );
     }
 }

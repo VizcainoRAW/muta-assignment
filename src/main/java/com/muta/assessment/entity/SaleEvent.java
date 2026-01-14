@@ -1,49 +1,30 @@
 package com.muta.assessment.entity;
 
 import com.muta.assessment.model.InventoryImpact;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
 @Entity
-@DiscriminatorValue("SALE")
+@Table(name = "sale_events")
+@DiscriminatorValue("sale")
 public class SaleEvent extends OperationalEvent {
 
-    @Transient
-    public Long getCustomerId() {
-        return ((Number) getEventData().get("customer_id")).longValue();
-    }
+    @Column(name = "customer_id", nullable = false)
+    private Long customerId;
 
-    @Transient
-    public void setCustomerId(Long customerId) {
-        getEventData().put("customer_id", customerId);
-    }
+    @Column(name = "sold_quantity", nullable = false, precision = 12, scale = 3)
+    private BigDecimal soldQuantity;
 
-    @Transient
-    public BigDecimal getSoldQuantity() {
-        return new BigDecimal(getEventData().get("sold_quantity").toString());
-    }
-
-    @Transient
-    public void setSoldQuantity(BigDecimal quantity) {
-        getEventData().put("sold_quantity", quantity);
-        setQuantity(quantity);
-    }
-
-    @Transient
-    public BigDecimal getUnitPrice() {
-        return new BigDecimal(getEventData().get("unit_price").toString());
-    }
-
-    @Transient
-    public void setUnitPrice(BigDecimal price) {
-        getEventData().put("unit_price", price);
-    }
+    @Column(name = "unit_price", nullable = false, precision = 12, scale = 2)
+    private BigDecimal unitPrice;
 
     @Override
-    public InventoryImpact calculateInventoryImpact() {
-        return InventoryImpact.OUT;
+    public InventoryImpact calculateImpact() {
+        return new InventoryImpact(
+                getWarehouseId(),
+                soldQuantity,
+                InventoryImpact.ImpactType.OUT
+        );
     }
 }

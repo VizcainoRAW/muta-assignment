@@ -1,39 +1,30 @@
 package com.muta.assessment.entity;
 
 import com.muta.assessment.model.InventoryImpact;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 
 @Entity
-@DiscriminatorValue("COLLECTION")
+@Table(name = "collection_events")
+@DiscriminatorValue("collection")
 public class CollectionEvent extends OperationalEvent {
 
-    @Transient
-    public Long getSupplierId() {
-        return ((Number) getEventData().get("supplier_id")).longValue();
-    }
+    @Column(name = "supplier_id", nullable = false)
+    private Long supplierId;
 
-    @Transient
-    public void setSupplierId(Long supplierId) {
-        getEventData().put("supplier_id", supplierId);
-    }
-
-    @Transient
-    public BigDecimal getCollectedQuantity() {
-        return new BigDecimal(getEventData().get("collected_quantity").toString());
-    }
-
-    @Transient
-    public void setCollectedQuantity(BigDecimal quantity) {
-        getEventData().put("collected_quantity", quantity);
-        setQuantity(quantity);
-    }
+    @Column(name = "collected_quantity", nullable = false, precision = 12, scale = 3)
+    private BigDecimal collectedQuantity;
 
     @Override
-    public InventoryImpact calculateInventoryImpact() {
-        return InventoryImpact.IN;
+    public InventoryImpact calculateImpact() {
+        return new InventoryImpact(
+                getWarehouseId(),
+                collectedQuantity,
+                InventoryImpact.ImpactType.IN
+        );
     }
 }
